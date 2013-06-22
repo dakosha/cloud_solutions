@@ -1,0 +1,1 @@
+include 'kudos-core-entities', 'kudos-lcms-entities', 'kudos-tms-entities', 'persistence', 'jbpm-service', 'seam-module', 'bim', 'lcms', 'lms', 'sms', 'tms', 'idp', 'ums', 'mms', 'mms-message-q-processor', 'mms-mail-q-processor', 'nms', 'qpid-lcms', 'sms-api'
