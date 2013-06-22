@@ -1,19 +1,154 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: "war"
+apply plugin: "java"
 apply plugin: "eclipse"
 
-configurations {
-	entities {
-		transitive = false
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.5'
+}
+
+tasks.withType(Compile) {
+		options.encoding = 'UTF-8'
+}
+
+tasks.eclipse.dependsOn(cleanEclipse)
+
+
+project.ext.deployment = "$eap6Home/$node/deployments/drugstore"
+
+
+project.ext.libraryVersions = [
+    junit: '4.10', arquillian: '1.0.3.Final', jbossJavaeeSpec: '1.0.0.Final', 
+    slf4j: '1.5.10', log4j: '1.2.14', jbossAS7: '7.1.1.Final', shrinkwrapDesc: '2.0.0-alpha-5'
+]
+
+
+repositories {
+	mavenCentral()
+	maven {
+		url "http://repository.jboss.org/nexus/content/groups/public"
 	}
-	provided {
-		transitive = false
+	maven {
+		url "http://mvn.b2e.kz/content/repositories/public"
+	}
+	maven {
+		url "https://maven.atlassian.com/content/repositories/public"
 	}
 }
 
 dependencies {
+	testCompile group: 'junit', name: 'junit', version: libraryVersions.junit
+	//testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container', version: libraryVersions.arquillian
+	//testRuntime group: 'org.jboss.arquillian.protocol', name: 'arquillian-protocol-servlet', version: libraryVersions.arquillian
+
+	//testCompile project(':kudos-core-entities')	
 	
-	provided 'org.jboss.resteasy:resteasy-jackson-provider:2.3.6.Final',
-		 'org.codehaus.jackson:jackson-core-asl:1.1.0'
-			 
+	//testRuntime group: 'org.jboss.as', name: 'jboss-as-arquillian-container-remote', version: libraryVersions.jbossAS7
+	//testRuntime 'org.jboss.remoting3:jboss-remoting:3.2.12.GA'
+
+	providedCompile 'org.jboss.spec:jboss-javaee-6.0:3.0.1.Final'
+	
+	providedCompile 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final',
+					'org.hibernate:hibernate-core:4.1.3.Final',
+					'org.codehaus.jackson:jackson-jaxrs:1.9.9'
+					
+}
+
+def filterTokens = [ejbJndiPattern:"${project.name}/#{ejbName}/local".toString(),
+							seamBootstrapsPu:'false',
+							seamEmfRef:'#{null}',
+							puJndiName:"java:comp/env/${project.name}/pu".toString(),
+							debug:(profile == 'dev' ? 'true':'false'),
+							transactionManagerLookupClass: 'org.hibernate.transaction.JBossTransactionManagerLookup']
+
+
+sourceSets {
+			main.java.srcDir 'src/main'
+			
+			hot {
+				compileClasspath += sourceSets.main.output
+				java.srcDir 'src/hot'
+			}
+			
+			test {
+				compileClasspath += sourceSets.hot.output
+				java.srcDir 'src/test'
+			}
+		}
+
+
+war {
+	from 'view'
+
+	if (profile == 'prod') {
+		classpath sourceSets.hot.output
+	}
+	
+	webInf {
+		if (profile == 'dev') {
+			from (sourceSets.hot.output) {
+				into('dev')
+			}
+		}
+
+		from ('resources/WEB-INF') {
+			include '*.*'
+			include 'taglib/**/*.xhtml'
+			exclude 'web.xml'
+		}
+
+		from ('resources/WEB-INF') {
+			include 'web.xml'
+			filter(ReplaceTokens, tokens:filterTokens)
+		}
+
+		from ('resources') {
+			include "components-${profile}.properties"
+			rename {'components.properties'}
+			filter(ReplaceTokens, tokens:filterTokens)
+			into('classes')
+		}
+
+		from ('resources') {
+			include 'messages*.properties'
+			include '*_theme.properties'
+			include 'seam.properties'
+			include '*.drl'
+			include 'timetableValidatorConfig.xml'
+			include '*jpdl.xml'
+			include '*.skin.properties'
+			include '**/*.xcss'
+			include '*.modules.xml'
+    			include '*-metadata.xml'
+			include 'jaxws-handlers.xml'
+			include 'freemarker/**/*.ftl'
+    			include '*.jks'
+			includeEmptyDirs = false
+			into('classes')
+		}
+
+	}
+	
+	from ('resources/deployment') {
+		include('jboss-deployment-structure.xml')
+		into('META-INF')
+	}
 	
 }
 
+
+task deploy (type: Copy, dependsOn: ['war']) {
+	from war.archivePath
+	into deployment
+}
+
+task cleanDeploy (type: Delete, overwrite: true) {
+	delete "$deployment/${project.name}.war"
+	delete "$deployment/${project.name}.war.deployed"
+}
+
+test {
+//	testLogging.showStandardStreams = true
+}

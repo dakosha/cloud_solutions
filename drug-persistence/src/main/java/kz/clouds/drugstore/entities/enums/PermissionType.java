@@ -1,8 +1,8 @@
 package kz.clouds.drugstore.entities.enums;
 
-public enum Gender {
+public enum PermissionType {
 
-	MALE, 
-	FEMALE;
+	READ,
+	WRITE
 	
 }
