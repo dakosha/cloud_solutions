@@ -48,6 +48,8 @@ dependencies {
 	//testRuntime group: 'org.jboss.as', name: 'jboss-as-arquillian-container-remote', version: libraryVersions.jbossAS7
 	//testRuntime 'org.jboss.remoting3:jboss-remoting:3.2.12.GA'
 
+	providedCompile project(':drug-persistence')
+
 	providedCompile 'org.jboss.spec:jboss-javaee-6.0:3.0.1.Final'
 	
 	providedCompile 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final',
