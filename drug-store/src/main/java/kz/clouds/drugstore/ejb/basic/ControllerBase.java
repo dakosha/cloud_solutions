@@ -1,0 +1,28 @@
+package kz.clouds.drugstore.ejb.basic;
+
+import javax.persistence.EntityManager;
+
+public abstract class ControllerBase<T> {
+
+	@SuppressWarnings("unchecked")
+	private T entity = (T) new Object();
+	
+	public EntityManager em;
+	
+	public void create(T obj) {
+		
+	}
+	
+	public void delete(T obj) {
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T get(long id) {
+		
+		System.out.println(entity.getClass());
+		
+		return null;
+	}
+	
+}

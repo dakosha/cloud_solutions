@@ -4,20 +4,38 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import kz.clouds.drugstore.entities.enums.NomenclatureType;
-
+/**
+ * id - идентификатор
+ * group - группа фармакологическая, для подбора замены
+ * name - наименование
+ * barcode - баркод на упаковке, для быстрого поиска
+ * type - тип препарата, можно ли продавать и делить его при продаже
+ * count - кол-во в упаковке (по умолчанию = 1)
+ * pageCount - минимальное кол-во которое можно продать (по умолчанию = 1) 
+ * 
+ * @author dauren
+ *
+ */
 @Entity
 @Table(name="DICTIONARY_NOMENCLATURE_")
 public class Nomenclature {
 
+	
 	private Long id;
+	private NomenclatureGroup group;
 	private String name;
-	private String originalBarcode;
+	private String barcode;
 	private NomenclatureType type;
 	private int count;
 	private int pageCount;
+	
+	public enum NomenclatureType {
+		SIMPLE,
+		DIVIDED
+	}
 	
 	@Id
 	@GeneratedValue
@@ -29,6 +47,14 @@ public class Nomenclature {
 		this.id = id;
 	}
 	
+	@ManyToOne
+	public NomenclatureGroup getGroup() {
+		return group;
+	}
+	public void setGroup(NomenclatureGroup group) {
+		this.group = group;
+	}
+	
 	@Column(name="NAME_")
 	public String getName() {
 		return name;
@@ -37,12 +63,12 @@ public class Nomenclature {
 		this.name = name;
 	}
 	
-	@Column(name="ORIGINAL_BARCODE_")
-	public String getOriginalBarcode() {
-		return originalBarcode;
+	@Column(name="BARCODE_")
+	public String getBarcode() {
+		return barcode;
 	}
-	public void setOriginalBarcode(String originalBarcode) {
-		this.originalBarcode = originalBarcode;
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 	
 	@Column(name="TYPE_")
