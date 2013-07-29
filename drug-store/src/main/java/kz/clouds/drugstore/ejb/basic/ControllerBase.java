@@ -10,18 +10,15 @@ public abstract class ControllerBase<T> {
 	public EntityManager em;
 	
 	public void create(T obj) {
-		
+		em.persist(obj);
 	}
 	
 	public void delete(T obj) {
-		
+		em.remove(obj);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public T get(long id) {
-		
 		System.out.println(entity.getClass());
-		
 		return null;
 	}
 	
