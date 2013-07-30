@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import kz.clouds.drugstore.entities.dictionaries.Nomenclature;
 
 @Entity
-@Table(name="SERIAL_")
+@Table(name="BUSINESS_SERIAL_")
 public class Serial {
 	
 	private long id;

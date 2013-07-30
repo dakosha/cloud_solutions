@@ -1,0 +1,10 @@
+apply plugin: 'war'
+
+dependencies {
+	providedCompile group: 'org.jboss.spec', name: 'jboss-javaee-6.0', version: '3.0.1.Final'
+}
+
+task deploy (type: Copy, dependsOn: ['war',':drug-persistence:deploy',':drug-store:deploy']) {
+	from war.archivePath
+	into deployment
+}

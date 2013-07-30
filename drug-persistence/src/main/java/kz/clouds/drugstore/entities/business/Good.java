@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import kz.clouds.drugstore.entities.dictionaries.Nomenclature;
 
 @Entity
-@Table(name="GOOD_")
+@Table(name="BUSINESS_GOOD_")
 public class Good {
 
 	private long id;
