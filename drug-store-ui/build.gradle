@@ -1,7 +1,9 @@
 apply plugin: 'war'
+apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
 
 dependencies {
 	providedCompile group: 'org.jboss.spec', name: 'jboss-javaee-6.0', version: '3.0.1.Final'
+	providedCompile 'javax.faces:jsf-api:2.0'
 }
 
 task deploy (type: Copy, dependsOn: ['war',':drug-store:deploy']) {
