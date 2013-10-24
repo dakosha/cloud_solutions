@@ -23,14 +23,13 @@ import javax.persistence.Table;
 @Table(name="DICTIONARY_NOMENCLATURE_")
 public class Nomenclature {
 
-	
 	private Long id;
 	private NomenclatureGroup group;
 	private String name;
 	private String barcode;
-	private NomenclatureType type;
-	private int count;
-	private int pageCount;
+	private NomenclatureType type = NomenclatureType.SIMPLE;
+	private int count = 1;
+	private int pageCount = 1;
 	
 	public enum NomenclatureType {
 		SIMPLE,
