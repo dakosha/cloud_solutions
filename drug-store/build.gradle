@@ -1,11 +1,9 @@
 apply plugin: 'war'
-//apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
 
 dependencies {
 
 	providedCompile group: 'org.jboss.spec', name: 'jboss-javaee-6.0', version: '3.0.1.Final'
 	providedCompile project(':drug-persistence')
-	//compile('com.vaadin:vaadin-cdi:1.0.0.alpha1')
 }
 
 task deploy (type: Copy, dependsOn: ['war',':drug-persistence:deploy']) {

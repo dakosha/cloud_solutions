@@ -2,6 +2,9 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 
+	eap6Home = "D:/github/dist"
+	node = "some1"
+	
 	project.ext.deployment = "$eap6Home/$node/deployments/drugstore"
 
 	repositories {

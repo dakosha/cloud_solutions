@@ -1,9 +1,10 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
+
+/build/
 
 .gradle/
 .classpath
@@ -17,3 +18,18 @@ local/
 /*.iws
 *.iml
 .DS_Store
+
+.gradle/
+/build/
+/*/build/
+/bin/
+/*/bin/
+.classpath
+.project
+.directory
+.settings/
+**/*/.idea
+.directory
+.DS_Store
+kudos-ui/npm-debug.log
+*.*~
